@@ -9,17 +9,13 @@ from tkinter import messagebox
 class DQN(nn.Module):
     def __init__(self):
         super(DQN, self).__init__()
-        self.fc1 = nn.Linear(9, 512)
-        self.fc2 = nn.Linear(512, 512)
-        self.fc3 = nn.Linear(512, 512)
-        self.fc4 = nn.Linear(512, 9)
+        self.fc1 = nn.Linear(9, 1024)
+        self.fc2 = nn.Linear(1024, 1024)
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))
-        x = torch.relu(self.fc2(x))
-        x = torch.relu(self.fc3(x))
-        return self.fc4(x)
-
+        return self.fc2(x)
+    
 class TicTacToeGUI:
     def __init__(self, root):
         self.root = root
@@ -36,7 +32,7 @@ class TicTacToeGUI:
     def load_model(self):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.dqn = DQN().to(self.device)
-        self.dqn.load_state_dict(torch.load("tictactoe_easy.pth", map_location=self.device))
+        self.dqn.load_state_dict(torch.load("tictactoe_medium.pth", map_location=self.device), strict=False)
         self.dqn.eval()
 
     def board_to_state(self, board):
